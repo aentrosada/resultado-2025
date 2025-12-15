@@ -5,6 +5,8 @@ export interface ReportCardData {
   mathematics: number | null;
   essay: number | null;
   studentName?: string;
+  certifyingInstitution?: string;
+  history?: string; // campo para armazenar a instituição certificadora encontrada (HISTÓRIO)
   isPassing?: boolean;
 }
 

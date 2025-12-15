@@ -34,6 +34,8 @@ export const analyzeReportCard = async (base64Image: string, mimeType: string): 
     5. Redação
 
     Tente também extrair o nome do participante se visível.
+    Se encontrar o nome da instituição certificadora (ex.: INEP, Secretaria Estadual, Prefeitura), inclua esse nome no campo "certifyingInstitution".
+    No campo de histórico (`HISTÓRIO`), coloque o nome da instituição certificadora encontrada.
     
     Retorne NULL se a nota não estiver visível ou legível.
     As notas numéricas geralmente vão de 60 a 180, e a redação de 0 a 10.
@@ -63,7 +65,8 @@ export const analyzeReportCard = async (base64Image: string, mimeType: string): 
             languages: { type: Type.NUMBER, description: "Nota de Linguagens, Códigos e suas Tecnologias" },
             mathematics: { type: Type.NUMBER, description: "Nota de Matemática e suas Tecnologias" },
             essay: { type: Type.NUMBER, description: "Nota da Redação" },
-            studentName: { type: Type.STRING, description: "Nome do estudante, se visível" }
+            studentName: { type: Type.STRING, description: "Nome do estudante, se visível" },
+            certifyingInstitution: { type: Type.STRING, description: "Nome da instituição certificadora, se visível (INEP, secretaria, etc.)" }
           }
         }
       }
@@ -75,6 +78,10 @@ export const analyzeReportCard = async (base64Image: string, mimeType: string): 
     }
 
     const data = JSON.parse(text);
+    // map certifyingInstitution into history (HISTÓRIO) for compatibility with UI/requirements
+    if (data.certifyingInstitution) {
+      data.history = data.certifyingInstitution;
+    }
     
     // Simple logic to determine if "passing" based on typical Encceja rules (100+ in subjects, 5+ in essay)
     const isPassing = (
