@@ -33,8 +33,8 @@ export const analyzeReportCard = async (base64Image: string, mimeType: string): 
     4. Matemática
     5. Redação
 
-    Tente também extrair o nome do participante se visível.
-    Se encontrar o nome da instituição certificadora (ex.: INEP, Secretaria Estadual, Prefeitura), inclua esse nome no campo "certifyingInstitution".
+    Tente também extrair o nome da instituição certificadora se visível.
+    Se encontrar o nome da instituição certificadora (ex.: Secretaria de Educação, INSTITUTO FEDERAL, Secretaria Estadual, Prefeitura), inclua esse nome no campo "certifyingInstitution".
     No campo de histórico ("HISTÓRIO"), coloque o nome da instituição certificadora encontrada.
     
     Retorne NULL se a nota não estiver visível ou legível.
