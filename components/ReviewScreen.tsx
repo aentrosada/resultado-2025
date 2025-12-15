@@ -5,9 +5,10 @@ interface ReviewScreenProps {
   data: ReportCardData;
   onConfirm: () => void;
   onRetake: () => void;
+  isSending?: boolean;
 }
 
-export const ReviewScreen: React.FC<ReviewScreenProps> = ({ data, onConfirm, onRetake }) => {
+export const ReviewScreen: React.FC<ReviewScreenProps> = ({ data, onConfirm, onRetake, isSending = false }) => {
   
   const ScoreRow = ({ label, score, minPass }: { label: string, score: number | null, minPass: number }) => {
     const isPass = score !== null && score >= minPass;
@@ -63,9 +64,10 @@ export const ReviewScreen: React.FC<ReviewScreenProps> = ({ data, onConfirm, onR
       <div className="flex flex-col gap-3">
         <button 
           onClick={onConfirm}
-          className="w-full bg-[#219653] hover:bg-[#1e874b] text-white font-black py-4 px-6 rounded-full shadow-md transition-all uppercase tracking-wider flex items-center justify-center gap-2 text-base"
+          disabled={isSending}
+          className="w-full bg-[#219653] hover:bg-[#1e874b] text-white font-black py-4 px-6 rounded-full shadow-md transition-all uppercase tracking-wider flex items-center justify-center gap-2 text-base disabled:opacity-60 disabled:cursor-not-allowed"
         >
-          <i className="fas fa-check"></i> CONFIRMAR E ENVIAR
+          <i className="fas fa-check"></i> {isSending ? 'Enviando...' : 'CONFIRMAR E ENVIAR'}
         </button>
         
         <button 

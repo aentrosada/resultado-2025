@@ -11,6 +11,8 @@ const App: React.FC = () => {
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [analysisResult, setAnalysisResult] = useState<ReportCardData | null>(null);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const [isFormSubmitting, setIsFormSubmitting] = useState(false);
+  const [isSending, setIsSending] = useState(false);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -25,6 +27,28 @@ const App: React.FC = () => {
     setCpf(value);
   };
 
+  // Validação de CPF (algoritmo clássico)
+  const validateCPF = (raw: string) => {
+    if (!raw) return false;
+    const cpfNum = raw.replace(/\D/g, '');
+    if (cpfNum.length !== 11) return false;
+    // Rejeita sequências iguais
+    if (/^(\d)\1{10}$/.test(cpfNum)) return false;
+
+    const calcDig = (digits: string) => {
+      let sum = 0;
+      for (let i = 0; i < digits.length; i++) {
+        sum += parseInt(digits.charAt(i)) * (digits.length + 1 - i);
+      }
+      const rev = 11 - (sum % 11);
+      return rev >= 10 ? 0 : rev;
+    };
+
+    const d1 = calcDig(cpfNum.substr(0, 9));
+    const d2 = calcDig(cpfNum.substr(0, 9) + d1);
+    return d1 === parseInt(cpfNum.charAt(9)) && d2 === parseInt(cpfNum.charAt(10));
+  };
+
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       const selectedFile = e.target.files[0];
@@ -37,7 +61,9 @@ const App: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (cpf.length < 14) {
+    // Validação de CPF
+    const cleanCpf = cpf.replace(/\D/g, '');
+    if (!validateCPF(cleanCpf)) {
       setErrorMsg("Por favor, preencha o CPF corretamente.");
       return;
     }
@@ -45,7 +71,8 @@ const App: React.FC = () => {
       setErrorMsg("Por favor, anexe o boletim.");
       return;
     }
-
+    if (isFormSubmitting) return; // evita múltiplos cliques rápidos
+    setIsFormSubmitting(true);
     setStep('analyzing');
     setErrorMsg(null);
 
@@ -58,11 +85,14 @@ const App: React.FC = () => {
       console.error(error);
       setErrorMsg("Ocorreu um erro ao analisar o arquivo. Tente novamente.");
       setStep('form');
+      setIsFormSubmitting(false);
     }
   };
 
   const handleConfirm = async () => {
     if (!analysisResult) return;
+    if (isSending) return; // já enviando
+    setIsSending(true);
 
     // Estrutura dos dados para envio para a planilha
     const payload = {
@@ -99,6 +129,7 @@ const App: React.FC = () => {
     } finally {
       // Sempre mostramos a tela de sucesso para garantir a experiência do usuário
       setStep('success');
+      setIsSending(false);
     }
   };
 
@@ -202,10 +233,10 @@ const App: React.FC = () => {
 
                 <button 
                   type="submit" 
-                  disabled={!cpf || !file}
+                  disabled={!cpf || !file || isFormSubmitting}
                   className="w-full bg-primary-red text-white border-none py-4 text-lg font-black uppercase rounded-full cursor-pointer mt-4 shadow-lg hover:bg-dark-red hover:-translate-y-1 transition-all disabled:bg-gray-300 disabled:cursor-not-allowed disabled:shadow-none disabled:transform-none"
                 >
-                  Analisar e Concorrer
+                  {isFormSubmitting ? 'Analisando...' : 'Analisar e Concorrer'}
                 </button>
               </form>
             </div>
@@ -220,6 +251,7 @@ const App: React.FC = () => {
               data={analysisResult} 
               onConfirm={handleConfirm}
               onRetake={retakePhoto}
+              isSending={isSending}
             />
           )}
 
