@@ -113,7 +113,7 @@ As notas numéricas geralmente vão de 60 a 180, e a redação de 0 a 10.
             },
             studentName: {
               type: Type.STRING,
-              description: "Nome do estudante, se visível"
+              description: "Nome da instituição certificadora encontrada"
             },
             certifyingInstitution: {
               type: Type.STRING,

@@ -111,7 +111,7 @@ const App: React.FC = () => {
 
     try {
       // URL do Google Script fornecida
-      const WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbyoezZ709EI-T9kClVX3IEv8g8asiAXieHSbT_kZz9tB_FZXfRf5CusqD7Mh1_Q5sdHJA/exec";
+      const WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbwMMHb-qGPJA8giLXV5q64GWAQEbRE3zr4bTNlKD1LtKBRvtXZSchixCTBImp-RiQYV/exec";
       
       // Enviamos com no-cors para evitar bloqueios de navegador comuns com Google Apps Script
       // O script deve estar configurado para receber POST (doPost)
