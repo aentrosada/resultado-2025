@@ -35,7 +35,7 @@ export const analyzeReportCard = async (base64Image: string, mimeType: string): 
 
     Tente também extrair o nome da instituição certificadora se visível.
     Se encontrar o nome da instituição certificadora (ex.: Secretaria de Educação, INSTITUTO FEDERAL, Secretaria Estadual, Prefeitura), inclua esse nome no campo "certifyingInstitution".
-    No campo de histórico ("HISTÓRIO"), coloque o nome da instituição certificadora encontrada.
+    No campo de histórico ("HISTÓRICO"), coloque o nome da instituição certificadora encontrada.
     
     Retorne NULL se a nota não estiver visível ou legível.
     As notas numéricas geralmente vão de 60 a 180, e a redação de 0 a 10.
