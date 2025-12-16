@@ -104,6 +104,7 @@ const App: React.FC = () => {
       matematica: analysisResult.mathematics,
       redacao: analysisResult.essay,
       passou: analysisResult.isPassing ? "SIM" : "NÃO",
+      local: analysisResult.certifyingInstitution || "",
       data_envio: new Date().toLocaleString('pt-BR')
     };
 
