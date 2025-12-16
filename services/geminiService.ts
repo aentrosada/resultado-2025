@@ -42,35 +42,22 @@ export const analyzeReportCard = async (
   const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
 
   const prompt = `
-Analise este documento (imagem ou PDF) de um boletim escolar do Encceja.
+    Analise este documento (imagem ou PDF) de um boletim escolar do Encceja.
+    
+    Extraia as notas das seguintes áreas de conhecimento, se estiverem visíveis:
+    1. Ciências da Natureza
+    2. Ciências Humanas
+    3. Linguagens
+    4. Matemática
+    5. Redação
 
-Extraia as notas das seguintes áreas de conhecimento, se estiverem visíveis:
-1. Ciências da Natureza
-2. Ciências Humanas
-3. Linguagens
-4. Matemática
-5. Redação
-
-⚠️ ATENÇÃO IMPORTANTE:
-- NÃO considere nomes de pessoas como instituição certificadora.
-- Instituição certificadora é SOMENTE um órgão oficial, como:
-  - INEP
-  - Secretaria Estadual de Educação
-  - Secretaria Municipal de Educação
-  - Instituto Federal
-  - Governo do Estado
-  - Prefeitura
-
-- Se o texto parecer nome de pessoa física (exemplo: dois a quatro nomes próprios),
-  retorne NULL em "certifyingInstitution".
-
-Extraia o nome da instituição certificadora SOMENTE se for claramente um órgão público
-ou instituição educacional oficial.
-
-Retorne NULL se a informação não estiver clara ou legível.
-
-As notas numéricas geralmente vão de 60 a 180, e a redação de 0 a 10.
-`;
+    Também extraia:
+    - O Nome do participante (se visível).
+    - A Unidade Certificadora ou Instituição (geralmente no cabeçalho ou rodapé).
+    
+    Retorne NULL se a nota não estiver visível ou legível.
+    As notas numéricas geralmente vão de 60 a 180, e a redação de 0 a 10.
+  `;
 
   try {
     const response = await ai.models.generateContent({
